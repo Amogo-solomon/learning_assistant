@@ -4,7 +4,7 @@ import React from 'react';
 import { AiOutlineCheckCircle, AiOutlineWarning } from 'react-icons/ai';
 
 const ProgressComponent = ({ quizzesCompleted, correctAnswers, flashcardsLearned, timeSpent, recommendations }) => {
-  const totalQuizzes = 10; // Example total number of quizzes
+  const totalQuizzes = 20; // Example total number of quizzes
   const totalFlashcards = 50; // Example total number of flashcards
   // Fetch total correct answers and quizzes completed from local storage
   const totalCorrectAnswers = parseInt(localStorage.getItem('totalCorrectAnswers')) || 0;
@@ -19,14 +19,16 @@ const ProgressComponent = ({ quizzesCompleted, correctAnswers, flashcardsLearned
   /* const correctAnswerRate = Math.round((correctAnswers / quizzesCompleted) * 100); */
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 my-8">
+    <div className="bg-white shadow-md rounded-lg p-6 my-20">
       <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Your Progress Dashboard</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Quiz Progress */}
         <div className="bg-blue-100 p-4 rounded-lg shadow-sm">
           <h3 className="text-xl font-semibold mb-2 text-blue-600">Quiz Progress</h3>
-          <p className="text-gray-700 mb-4">Quizzes completed: {quizzesCompleted}/{totalQuizzes}</p>
+{/*           <p className="text-gray-700 mb-4">Quizzes completed: {quizzesCompleted}/{totalQuizzes}</p> */}
+          <p className="text-gray-700 mb-4">Quizzes completed: {quizzesCompleted}</p>
+          <p className="text-gray-700 mb-4">Target: {totalQuizzes}</p>
           <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
             <div className="bg-blue-600 h-4 rounded-full" style={{ width: `${quizCompletionPercentage}%` }}></div>
           </div>
@@ -62,12 +64,12 @@ const ProgressComponent = ({ quizzesCompleted, correctAnswers, flashcardsLearned
 
         {/* Time Spent on Topics */}
         <div className="bg-yellow-100 p-4 rounded-lg shadow-sm">
-          <h3 className="text-xl font-semibold mb-2 text-yellow-600">Time Spent on Topics</h3>
-          <p className="text-gray-700 mb-4">Total time spent: {timeSpent} minutes</p>
+          <h3 className="text-xl font-semibold mb-2 text-yellow-600">Time Spent on Topics(Under construction)</h3>
+         {/*  <p className="text-gray-700 mb-4">Total time spent: {timeSpent} minutes</p> */}
           <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
-            <div className="bg-yellow-600 h-4 rounded-full w-[90%]" style={{ width: `${(timeSpent / 100) * 100}%` }}></div>
+            {/* <div className="bg-yellow-600 h-4 rounded-full w-[90%]" style={{ width: `${(timeSpent / 100) * 100}%` }}></div> */}
           </div>
-          <p className="text-sm text-gray-600">{timeSpent} minutes spent studying</p>
+          {/* <p className="text-sm text-gray-600">{timeSpent} minutes spent studying</p> */}
         </div>
       </div>
 

@@ -96,7 +96,7 @@ export const getQuizQuestions = async (input) => {
       });
   
       // Send message to generate a quiz and expect JSON in return
-      const result = await chatSession.sendMessage(`Generate a quiz on the topic: ${input} with multiple-choice, true/false, and fill-in-the-blank questions. Format the response as a JSON array where each question has the format: {"question": "Question text", "type": "multiple-choice/true-false/fill-in-the-blank", "options": ["option1", "option2", "option3", "option4"], "correct": "correct answer"}`);
+      const result = await chatSession.sendMessage(`Generate a quiz on the topic: ${input} with multiple-choice, true/false, and fill-in-the-blank questions. Format the response as a JSON array where each question has the format: {"question": "Question text", "type": "multiple-choice/true-false/fill-in-the-blank", "options": ["option1", "option2", "option3", "option4"], "correct": "correct answer"}. do not generate questions outside the context of the text inputed or the file uploaded. do not generate any default`);
   
       // Extract and clean the response text, removing backticks or extra text
       let cleanedResult = result.response.text().replace(/```json|```/g, '').trim();
@@ -141,7 +141,7 @@ export const getFlashcards = async (input) => {
     });
 
     // Generate flashcards for the input topic and expect a JSON array
-    const result = await chatSession.sendMessage(`Generate flashcards on the topic: ${input}. Format as a JSON array where each flashcard has {"question": "Question text", "answer": "Answer text"}`);
+    const result = await chatSession.sendMessage(`Generate flashcards on the topic: ${input}. Format as a JSON array where each flashcard has {"question": "Question text", "answer": "Answer text"} do not generate more that 3o words per card. also, do not generate cards outside the context of the text inputed or the file uploaded. do not generate any default `);
 
     // Clean the result to remove unwanted text
     let cleanedResult = result.response.text().replace(/```json|```/g, '').trim();

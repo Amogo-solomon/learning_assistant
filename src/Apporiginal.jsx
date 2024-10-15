@@ -24,12 +24,6 @@ function App() {
   const [file, setFile] = useState(null); // State for uploaded file
   const [fileContent, setFileContent] = useState(''); // Extracted file content
 
-  // New state for file size error
-  const [fileSizeError, setFileSizeError] = useState('');
-
-  // File size limit set to 5MB (in bytes)
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
   // Tracking user performance (quizzes, flashcards learned)
   const [quizResults, setQuizResults] = useState(() => JSON.parse(localStorage.getItem('quizResults')) || []);
   const [flashcardsLearned, setFlashcardsLearned] = useState(() => JSON.parse(localStorage.getItem('flashcardsLearned')) || 0);
@@ -51,43 +45,65 @@ function App() {
     }
   };
 
-  // Handle flashcards generation using either user input or uploaded file content
-  const handleFlashcards = async () => {
-    const inputData = fileContent || input; // Use file content if uploaded, else use input
-    setLoadingFlashcards(true); // Start loading
-    try {
-      const result = await getFlashcards(inputData);
+// Handle flashcards generation using either user input or uploaded file content
+const handleFlashcards = async () => {
+  const inputData = fileContent || input; // Use file content if uploaded, else use input
+  setLoadingFlashcards(true); // Start loading
+  try {
+    const result = await getFlashcards(inputData);
 
-      // Check if result is an array of flashcards directly or needs parsing
-      let newFlashcards = [];
-      if (Array.isArray(result)) {
-        // If the API returned an array of flashcards
-        newFlashcards = result.map(item => ({
-          question: item.question || "Question Placeholder", // Ensure there's a question field
-          answer: item.answer || "Answer Placeholder", // Ensure there's an answer field
-          learned: false,
-        }));
-      } else if (typeof result === 'string') {
-        // If the API returned a string
-        newFlashcards = result.split('\n').map(item => ({
-          question: item,
-          answer: "Answer Placeholder", // Replace this with dynamic answers if available
-          learned: false,
-        }));
-      } else {
-        console.error('Unexpected result format:', result);
-        throw new Error('Invalid data format from getFlashcards API');
-      }
-
-      // Update the flashcards state and localStorage
-      setFlashcards(newFlashcards);
-      localStorage.setItem('flashcards', JSON.stringify(newFlashcards));
-    } catch (error) {
-      console.error('Failed to fetch flashcards:', error);
-    } finally {
-      setLoadingFlashcards(false); // Stop loading
+    // Check if result is an array of flashcards directly or needs parsing
+    let newFlashcards = [];
+    if (Array.isArray(result)) {
+      // If the API returned an array of flashcards
+      newFlashcards = result.map(item => ({
+        question: item.question || "Question Placeholder", // Ensure there's a question field
+        answer: item.answer || "Answer Placeholder", // Ensure there's an answer field
+        learned: false,
+      }));
+    } else if (typeof result === 'string') {
+      // If the API returned a string
+      newFlashcards = result.split('\n').map(item => ({
+        question: item,
+        answer: "Answer Placeholder", // Replace this with dynamic answers if available
+        learned: false,
+      }));
+    } else {
+      console.error('Unexpected result format:', result);
+      throw new Error('Invalid data format from getFlashcards API');
     }
-  };
+
+    // Update the flashcards state and localStorage
+    setFlashcards(newFlashcards);
+    localStorage.setItem('flashcards', JSON.stringify(newFlashcards));
+  } catch (error) {
+    console.error('Failed to fetch flashcards:', error);
+  } finally {
+    setLoadingFlashcards(false); // Stop loading
+  }
+};
+
+
+  // Handle flashcards generation using either user input or uploaded file content
+  // const handleFlashcards = async () => {
+  //   const inputData = fileContent || input; // Use file content if uploaded, else use input
+  //   setLoadingFlashcards(true); // Start loading
+  //   try {
+  //     const result = await getFlashcards(inputData);
+  //     const newFlashcards = result.split('\n').map(item => ({
+  //       question: item,
+  //       answer: "Answer Placeholder", // Replace this with dynamic answers if available
+  //       learned: false,
+  //     }));
+  //     setFlashcards(newFlashcards);
+  //     localStorage.setItem('flashcards', JSON.stringify(newFlashcards));
+  //   } catch (error) {
+  //     console.error('Failed to fetch flashcards:', error);
+  //   } finally {
+  //     setLoadingFlashcards(false); // Stop loading
+  //   }
+  // };
+
 
   // Handle progress recommendations
   const handleRecommendations = async () => {
@@ -109,15 +125,6 @@ function App() {
   // Function to handle file upload
   const handleFileUpload = async event => {
     const uploadedFile = event.target.files[0];
-
-    // Check if the file exceeds the size limit
-    if (uploadedFile.size > MAX_FILE_SIZE) {
-      setFileSizeError('File size exceeds the 5MB limit. Please upload a smaller file.');
-      setFile(null); // Clear any previously selected file
-      return;
-    }
-
-    setFileSizeError(''); // Clear any previous errors
     setFile(uploadedFile);
 
     // Process file to extract text content
@@ -168,7 +175,7 @@ function App() {
     const totalCompletedQuizzes = quizResults.reduce((sum, quiz) => sum + quiz.total, 0);
 
     localStorage.setItem('totalCorrectAnswers', totalCorrectAnswers);
-    localStorage.setItem('totalCompletedQuizzes', totalCompletedQuizzes);
+  localStorage.setItem('totalCompletedQuizzes', totalCompletedQuizzes);
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
     localStorage.setItem('flashcardsLearned', JSON.stringify(flashcardsLearned));
     localStorage.setItem('timeSpent', JSON.stringify(timeSpent)); // Save time spent
@@ -192,10 +199,10 @@ function App() {
 
       {/* File upload functionality for RAG */}
       <div className="my-4">
-{/*         <small className="text-gray-600">Upload a study document to generate quiz and flashcards automatically!</small> */}
-        <label htmlFor="input" className="block text-sm font-medium text-gray-600">Or Upload a study document to generate quizzes and flashcards automatically!</label>
-        <small className="text-gray-600">accepted format:pdf,.doc,.docx,.txt,.csv,.xls,.xlsx</small> 
-       
+        {/* <label htmlFor="file-upload" className="block mb-2 text-sm font-medium text-gray-700">
+          Upload Document (Optional):
+        </label> */}
+        <small className="text-gray-600">Upload a study document to generate quiz and flashcards automatically!</small>
         <input
           id="file-upload"
           type="file"
@@ -203,8 +210,6 @@ function App() {
           onChange={handleFileUpload}
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
         />
-        {/* Display error message if file exceeds size limit */}
-        {/* {fileSizeError && <p className="text-red-500 text-sm mt-2">{fileSizeError}</p>} */}
       </div>
 
       {/* Buttons for different functionalities */}
@@ -269,10 +274,10 @@ function App() {
         )}
       </div>
 
-      <div id="progress" className="mt-5">
+      <div id="progress">
         {loadingRecommendations ? (
-          <div className="flex justify-center items-center mt-4 ">
-            <AiOutlineLoading3Quarters className="animate-spin text-4xl text-purple-500 mt-4" />
+          <div className="flex justify-center items-center">
+            <AiOutlineLoading3Quarters className="animate-spin text-4xl text-purple-500" />
             <p className="ml-2 text-purple-500">Fetching recommendations...</p>
           </div>
         ) : recommendations ? (

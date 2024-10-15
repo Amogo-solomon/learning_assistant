@@ -23,7 +23,7 @@ const FlashcardComponent = ({ flashcards, setFlashcardsLearned, markFlashcardAsL
   };
 
   return (
-    <div className="">
+    <div className="mb-4 mb-20">
       <h2 className="text-2xl font-bold mb-4 text-center">Flashcards</h2>
 
       {/* Form to add new flashcard */}
