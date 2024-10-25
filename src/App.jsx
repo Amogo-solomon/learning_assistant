@@ -15,6 +15,13 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [recommendations, setRecommendations] = useState('');
 
+// Add this useEffect hook right here
+useEffect(() => {
+  // Clear flashcards from and localStorgae on component mount
+  setFlashcards([]); // Clear flashcards in state
+  localStorage.removeItem('flashcards'); // Clear flashcards from localStorage
+}, []);
+
   // Loading state for quiz, flashcards, and recommendation
   const [loadingQuiz, setLoadingQuiz] = useState(false);
   const [loadingFlashcards, setLoadingFlashcards] = useState(false);
